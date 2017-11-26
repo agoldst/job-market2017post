@@ -214,7 +214,7 @@ But the tenured and tenure-track faculty have not collectively taken a clear pos
 
 
 
-
+*Editing this, 11/26/17.* I have put the R markdown source for this post, including the data and code for the plot, [on github](https://github.com/agoldst/job-market2017post). I just copied out a bunch of numbers by hand and copy-and-pasted the rest. See footnote 1.
 
 
 
