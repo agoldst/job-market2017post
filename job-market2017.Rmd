@@ -1,0 +1,231 @@
+---
+title: "The Uncounted: Jobs and Graduates"
+date: "2017-11-25"
+categories: [work]
+output:
+    hugormd::post:
+        transparent_plots: true
+---
+
+```{r setup, include=F, cache=F}
+library(tidyverse)
+knitr::opts_chunk$set(echo=F, message=F)
+```
+
+```{r jil_phds}
+jil_phds <- data_frame(
+    year=1975:2016,
+    phds=c(rep(NA, 12), scan(text=" 
+853 
+866 
+930 
+980 
+1056 
+1142 
+1201 
+1205 
+1393 
+1395 
+1431 
+1487 
+1411 
+1467 
+1328 
+1289 
+1240 
+1195 
+1209 
+1254 
+1173 
+1256 
+1264 
+1320 
+1319 
+1404 
+1351 
+1372 
+1389 
+"), NA),
+    asst=c(rep(NA, 32), scan(text="
+879 	645  	469 	541 	541 	513  	470 	448 	402 	320
+")),
+asst_another=c(rep(NA, 32), scan(text="
+	192 	151 	78 	92 	109 	98 	73 	75 	63 	72")),
+ntt=c(rep(NA, 32), scan(text="
+353 	255 	304 	278 	293 	277 	272 	278 	261 	247")),
+ads_total=scan(text="
+1450
+1441
+1325
+1327
+1456
+1575
+1461
+1338
+1368
+1492
+1700
+1741
+1978
+2075
+1895
+1507
+1288
+1152
+1075
+1159
+1098
+1193
+1121
+1517
+1670
+1828
+1732
+1680
+1541
+1739
+1687
+1793
+1648
+1228
+964
+1042
+1087
+1014
+928
+884
+823
+725"))
+```
+
+The MLA's preliminary [report on the 2016–2017 Job Information List](https://mlaresearch.mla.hcommons.org/2017/10/17/preliminary-report-on-the-mla-job-information-list-2016-17/) is out, with the predictable and disheartening finding that job listings in both English and modern languages are down to another all-time low. Actually the situation is worse than the report's first chart suggests, since the proportion of tenure-track positions has also been on a steady decline. Meanwhile the number of new PhDs in English is largely steady.
+
+<!--more-->
+
+Here are the two trends on a single chart, using the data I was able to get:[^data]
+
+```{r}
+jil_phds %>%
+    mutate(asst=asst + asst_another) %>%
+    select(-asst_another) %>%
+    rename(`Asst. Prof. Ads`=asst,
+           `New PhDs`=phds,
+           `Total Ads`=ads_total,
+           `NTT Ads`=ntt) %>%
+    gather("type", "number", -year) %>%
+    ggplot(aes(year, number, group=type, color=type, linetype=type)) +
+        geom_line() +
+        expand_limits(y=0) +
+        geom_vline(xintercept=2008,linetype="dotted") +
+        scale_color_brewer(type="qual", palette="Dark2",
+                           breaks=c("New PhDs", "Total Ads",
+                                    "Asst. Prof. Ads", "NTT Ads")) +
+        scale_linetype_manual(breaks=c("New PhDs", "Total Ads",
+                                    "Asst. Prof. Ads", "NTT Ads"),
+                              values=c("New PhDs"="dashed",
+                                       "Total Ads"="solid",
+                                       "Asst. Prof. Ads"="solid",
+                                       "NTT Ads"="solid")) +
+        guides(color=guide_legend(""), linetype=guide_legend("")) +
+        labs(title="MLA English Job Ads and New English PhDs",
+             subtitle="(PhDs: dashed line; ads: solid lines)",
+             caption=
+"Andrew Goldstone, November 2017. Data from the MLA Research
+Office and the Humanities Indicators Project. I am entirely
+responsible for errors and omissions in this chart.")
+```
+
+[^data]: The count of new PhDs is taken from the supporting data for a chart on [Humanities Indicators](https://humanitiesindicators.org/content/indicatordoc.aspx?i=44#fig10831). These are based on the NSF Survey of Earned Doctorates, but I was unable to get an output from WebCASPAR that matched these numbers, so I couldn't extend the series back any further (apparently discipline categories on the SED changed in 1987). The counts for ads are transcribed from two reports on the job list: the full [report on the 2015–2016 JIL](https://www.mla.org/content/download/58256/1846498/RptJIL15_16.pdf) for counts up through 2006, and the preliminary report for 2007 and after. The 2016 report does in fact include tallies of TT as against NTT job ads going back to 2000, but it is not totally clear to me how to match these against the categories in the new preliminary report. There are many fewer NTT positions before the crash. Some of the overlapping data points do not match; the MLA Research Office must have revised its counts. I wish MLA would provide its JIL data in machine-readable form, since it clearly has this for its own charts.
+
+
+The key feature of this timeline, in my view, is not that it is once again, and as always, "a bad year on the market," but that 2008–2009 (the dotted vertical line) marks a significant transition for the labor system of English studies. Of course it was prepared for by many years of managerial maneuvering, public divestment, and faculty indifference. But the post-crash decade has established the historical *floor* on the number of openings as the new *ceiling* and revealed to management that for English, austerity can continue long past the formal end of the recession.[^not-just-english]
+
+
+[^not-just-english]: Not for English alone, of course. The MLA research office report shows the parallel trend in job listings for other literatures and languages. As for PhD production, the American Academy's Humanities Indicators shows [the yearly production of degrees](https://humanitiesindicators.org/content/indicatordoc.aspx?i=44#fig10831) in various disciplines. I'm going to focus on English rather than the humanities here. English specialists' megalomaniacal habit of conflating their discipline with "the humanities" actually blocks us from recognizing many of the special features of the situation of English, starting with the centrality of first-year composition to the labor system for English PhDs.
+
+The number of new PhDs is not the number of job seekers, of course; I can't find any accounts of how large this pool actually is, but we should assume that many people who do not secure permanent positions in one year continue to seek tenure-track employment the next year. In other words, the ratio of new PhDs to new tenure-track openings is a grotesque underestimate of the ratio of TT-job-seekers to TT positions.
+
+The situation looks bad; anyone who has searched for an academic job in recent years, or knows someone who has, understands that the situation is actually terrible. But looking at this situation only in terms of the dwindling MLA job list can deceive us, because it invites us to think that TT employment is the only employment PhDs in English can obtain; all those "excess" job-seekers who don't get jobs on the "market" seemingly fall into outer darkness.
+
+They don't. What they mostly do, as everyone knows, is enter into contingent employment in universities. No one knows, however, just how many do this, or for how long, or in what kind of contingency. There is literally no data. Imagine for a moment what it would be like if the JIL advertised *all* the academic jobs PhDs applied for in a given year: not just TT jobs and the small  number of full-time NTT jobs for which national or international searches are conducted, but the full range of contingent positions English PhDs take up. Then we might have a picture of the profession's ongoing transition from long-term to casual employment. (Does the term "profession" even apply any more in this situation?)
+
+The reasons why this fantasy job-list is a fantasy are worth enumerating. Most concretely, an ad on the JIL [costs](https://www.mla.org/Resources/Career/Job-Information-List/Submit-or-Edit-a-Job-Listing/Schedule-of-Fees-for-Job-Listings) a cool 595 dollars. That would be 10% or 20% of a typical per-course fee for an adjunct at a four-year institution. Institutions would hardly add this to their instructional costs---not least because it would invite the question, how about spending that extra 10% on a raise? But more expensive still would be the time required of the department chair or program director to conduct a "search."^[Imagine search committees for adjuncts!] The whole point of contingent labor is that it's easy to get on the fly and easy to get rid of too. One of the indignities of being an adjunct is that the only way to find out who's hiring is to send your CV to every department and program you can think of and hope to get a reply.
+
+The opacity of adjunct hiring is, like the size of the reserve army of PhD labor, a virtue of the system as far as management is concerned. Centralizing and rationalizing this hiring system would perhaps be desirable, but it is far beyond the organizational power of the MLA as we know it. A lesser but still useful reform would be to compel ADE/ADFL departments to report on the past year's adjunct hiring (perhaps by making it a condition for advertising in the JIL). Though this would serve an important function in understanding the actually-existing profession, I doubt member departments would welcome this proposal, and I doubt MLA would undertake a measure that threatened the JIL ad revenue stream. 
+
+Actually the giant casualization-sized gap in the JIL is just the beginning of our chosen ignorance about the fate of PhD students in English studies. English PhDs are surveyed when they receive their degrees as part of the [Survey of Earned Doctorates](https://www.nsf.gov/statistics/2017/nsf17306/). This tells us, for example, that of 1590 people getting an English PhD in 2015, 584 had secured definite employment (of which 87.3% were in academe) and 562 were "seeking employment or study" ([Table 69](https://www.nsf.gov/statistics/2017/nsf17306/datatables/tab-69.htm)). The SED doesn't ask whether those definite jobs are contingent or not, and, of course, it doesn't follow PhD holders past their graduation, whereas it seems quite likely that many English PhD holders find and change jobs multiple times in the years after the PhD. As I was reminded by the recent, quite useful [GAO report](http://www.gao.gov/assets/690/687871.pdf) on contingent faculty across disciplines, the [Survey of Doctorate Recipients](https://www.nsf.gov/statistics/srvydoctoratework/) does sample PhD holders who received degrees in past years---but this survey stopped studying humanities fields after 1995 (as a result of cuts to the NEH, [remarks David Laurence](https://mlaresearch.mla.hcommons.org/2014/02/26/our-phd-employment-problem) in 2014). And the last [Humanities Departmental Survey](https://humanitiesindicators.org/content/indicatordoc.aspx?i=457) by the American Academy, which studies staffing patterns by discipline, was in 2013.
+
+The MLA carried out a "where are they now?" study with support from the Mellon foundation a few years ago. The MLA constructed a sample of 2590 people who received modern language PhDs in the whole period 1996–2011 and located information about their current jobs (as of 2013). The only reports on the results I could find were a [blog post by David Laurence](https://mlaresearch.mla.hcommons.org/2015/02/17/where-are-they-now-occupations-of-1996-2011-phd-recipients-in-2013-2/) and a [newsletter summary by Rosemary Feal](https://apps.mla.org/pdf/nl_47_1_web.pdf). These are tantalizing and frustratingly incomplete accounts, but they give the following figures:
+
+```{r}
+options(knitr.kable.NA="-")
+tribble(
+~ cohort, ~ employed, ~ contingent,
+"2005–2011",         46.2, NA,
+"2000–2004",         51.1, NA,
+"1996–1999",         46.1, NA,
+"all (1996–2011)",   47.93, 20.3
+) %>%
+    rename(`PhD cohort`=cohort,
+           `% T/TT employed`=employed,
+           `% contingent`=contingent) %>%
+    knitr::kable(format="html")
+```
+
+Laurence and Feal both report only the overall proportion of the sample in contingent faculty positions. It would be revealing indeed to know where the most recent cohorts are working, and how the earlier cohorts have fared since. Given that even the most recent cohort the MLA looked at is divided in half by the 2008 crash, it is difficult to imagine the T/TT proportion is comparable for the 2012–2017 group. And of course there are enormous unanswered questions about how these outcomes could be disaggregated.
+
+A cohort study of humanities PhDs would answer many questions. Looking at those MLA Research Office blog posts, it seems to me such a study might have been on the horizon a few years ago; so far as I know, it has not been undertaken.[^stanford] Rather than continue their earlier work on this, MLA and Mellon seem to be too busy fantasizing that "[mission-driven organizations](https://www.mla.org/Convention/MLA-2018/Possible-Futures-Career-Fair)"  have an untapped desire for English and modern languages PhDs, or that new PhDs will find good "alt-ac" jobs in abundance if graduate faculty can be browbeaten into abandoning the belief that the primary purpose of the doctorate in English literature is to train professional scholars and teachers of English literature. In the meantime I must say it seems quite convenient that we remain vague about just how large the flow from the English PhD into contingency and underemployment is, since it means no one can really assess whether the exertions of MLA et al. on behalf of alt- and non-academic careers for PhDs could possibly be commensurate with the scale of the problem of casualization. 
+
+[^stanford]: The only cohort study with the kind of granular data I am talking about is the [Stanford PhD Alumni Employment Study](http://web.stanford.edu/dept/pres-provost/irds/PhDAlumniEmployment), an intriguing body of data but of course not generalizable beyond Stanford.
+
+Many individual departments doubtless know quite a lot about the outcomes of their graduates, but I have yet to see a department willing to enumerate with any precision how many of its PhDs go on to teach off the tenure-track or for how long they do so. My department is [more comprehensive than most](http://english.rutgers.edu/graduate-92/placement1.html), but I strive to convince my colleagues to go even further. The department that gave me my PhD, by contrast, employed a strategy of vigorous forgetting: as soon as someone entered an adjunct position, they were simply no longer counted as a "placement" of any kind. The sense around the department was that such people were only to be mentioned in hushed tones, or, preferably, not at all. Perhaps it is only fitting that the home of close reading should publish a [list of placements](https://english.yale.edu/graduate/graduate-student-placement) whose omissions and distortions are more revealing than its overt content.
+
+What is certain is that these straw-grasping and face-saving exertions have proven easier than efforts to reorganize the academic labor system itself. One strategy would be to try to reproduce the current level of openings as a natural limit, reducing the size of PhD programs in order to try to consign fewer students to bad jobs. Jim English argues in [*The Global Future of English Studies*](https://books.google.com/books?id=Jd8lrc27ztUC) (Wiley-Blackwell, 2012) that this move would increase the bargaining power of people with PhDs:
+
+> Despite the immiseration faced by many of the students to whom we have
+> conferred PhDs, we have refused to accept this strategically suppressed but
+> stable limit.... This posture of market refusal, from which we can pretend
+> that because the academic job market is part of a cynical system for
+> maintaining the contingent labor force (which it is), we cannot affect it by
+> altering the scale of our graduate programs (which we can), plays well into 
+> the hands of our employers and managers. It not only reduces the odds that our
+> PhD graduates will find full-time tenurable employment, but exerts steady
+> downward pressure on the compensation and job security for all faculty in the
+> discipline. (67--68)
+
+Yet though versions of this proposal have circulated for a long time, the profession has not embraced this tactic. Already in a weak position in their institutions, English departments---of which even the most powerful and prestigious operate on a siege mentality---are hardly going to signal their willingness to be cut back by voluntarily reducing their graduate programs. In the research university, the size of a graduate program is in itself a prestige signal both within the institution and across the profession. It justifies tenure-line faculty hiring. And internally funded graduate students are evidence of significant institutional investment; unfunded or externally funded students are of course a revenue stream. Even if graduate students did not supply relatively inexpensive teaching labor, they would be a precious good for departments.[^bousquet] 
+
+[^bousquet]: The symbolic value of graduate students is the major missing piece in Marc Bousquet's otherwise definitive analysis of the "job market" as an ideological cover for casualization in [*How the University Works*](http://www.nyupress.org/webchapters/9780814799741_Bousquet_intro.pdf) (NYU Press, 2008), [introduction](http://www.nyupress.org/webchapters/9780814799741_Bousquet_intro.pdf).
+
+The alternative to trying to enforce a national *numerus clausus* would be to coordinate local struggles to change academic staffing patterns. Currently, the academic labor movement's energies are focused on improving the status of the worst-treated academic workers. This makes excellent sense. Unionize adjuncts, improve their benefits, and campaign for renewable positions, fractional tenure lines, and conversions to permanent status with a career path of reviews and promotions. These campaigns might perhaps help to re-articulate the issue of smaller graduate programs more palatably; it would be worth asking whether individual departments should attempt to trade some graduate student slots for converting some of their own contingent employees to permanent status. Some of the latter usually have PhDs from the home department, so this tradeoff could directly benefit a department's own students.
+
+Yet probably the best outcome we can aspire to for these efforts would be to re-professionalize contingent faculty into reasonably good but predominantly non-tenure-track jobs. Actually defending tenure requires something else: vigorously affirming,  not just rhetorically but with the weapons of the workplace, that the principal work of the university cannot be satisfactorily done by contingent instructors. It is no insult to the skill and commitment of contingent faculty members to point out that they are deprived of a key necessity for scholarship and teaching: the intellectual freedom and the capacity to plan and reflect over the long term which tenure affords. So long as all English scholars propose are vague nostrums about the value of studying our subject, we can always be answered by the actual fact of widespread contingent instruction in that subject. The [GAO report](http://www.gao.gov/assets/690/687871.pdf) contains case studies of public institutions in Georgia and North Dakota, finding that (taking all disciplines together) undergraduate lower-division courses are taught, in the majority, by contingent faculty (Table 4, p. 21).
+
+I see very few arguments for the indispensability of scholarly *research* in English studies, but this is an obvious prerequisite for any large-scale attempt to improve the academic futures of people getting the PhD. It would be easier to make this case if English studies were not so largely divorced from rhetoric and composition, media studies, and communication studies, and as a result unable to convincingly claim a monopoly on reproducing, studying, and advancing *written culture* as a whole, or, if you prefer, *literacy* broadly understood. (This would make the relation of creative writing to English more intelligible too.) What we have left ourselves with instead is a residual version of *literariness*, typified by novels and lyric poetry, whose value as cultural capital is now quite limited, no matter how many heartfelt appeals we make to cultivating empathy for the Other or critical sensitivity to language. We need a shared understanding of the subject matter which is less liable to make English into a kind of moral finishing school or, worse, luxury pastime for those who can afford such things.
+
+Of course the best possible case for research in English would still have to face the concerted contempt of the whole élite, both its liberal-managerial faction and the ultramontane capitalist reactionaries, for any discipline not oriented to technical job training in the undergraduate classroom and revenue- or private-profit-generating "innovation" in research.[^stem]
+But this circumstance should tell us that the issue is not so much how to fine-tune the rhetorical justifications we provide for studying English---a lot of people in the profession seem to spend too much time on that already---as how to organize a collective with the capacity to support its arguments through joint action. The work is already underway, particularly in the wave of graduate-student unionization which is proceeding in the teeth of Trumpist opposition by university administrators.
+
+But the tenured and tenure-track faculty have not collectively taken a clear position. The professional organizations and foundations have vacillated, and, as I have suggested above, they appear to be drifting into strategies of denial and willed ignorance which, however much well-meaning activity accompanies them, constitute a refusal of real solidarity across ranks. Such solidarity will require, it seems to me, something like a social movement, an injection of energy to divert the T/TT faculty from being consumed by their ordinary activities---and these activities are indeed all-consuming---in favor of asserting their capacity to join with the contingent majority in dictating the terms of work for members of the university. The alternative, which for all its likelihood I do not accept, is to spend the few decades remaining in the life of the university as we know it perfecting our annual ritual of lament for the shrinking MLA job list.
+
+
+
+[^stem]: Among the many mystifications produced by this situation is the near-universal belief that the cult of "STEM" benefits the natural sciences. In fact the mania for short-term revenue growth is just as hostile to fundamental natural science as it is to the *Geisteswissenschaften*. I have a foolish hope that the liberal arts could recognize that they are all, collectively, as intellectual endeavors oriented to the public good, harmed by the corporatizing agenda. How many cuts to the NSF will it take?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
